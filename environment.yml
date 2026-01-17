@@ -1,0 +1,11 @@
+name: red_wine_quality_model_env
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - mlflow==2.2.2
+      - dagshub
