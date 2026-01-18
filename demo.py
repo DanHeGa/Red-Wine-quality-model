@@ -16,8 +16,10 @@ from urllib.parse import urlparse
 import mlflow
 from mlflow.models.signature import infer_signature
 import mlflow.sklearn
-import dagshub
 import logging
+
+import dagshub
+dagshub.init(repo_owner='DanHeGa', repo_name='Red-Wine-quality-model', mlflow=True)
 
 
 logging.basicConfig(level=logging.WARN)
@@ -55,7 +57,7 @@ if __name__ == "__main__":
     test_y = test[["quality"]]
 
     alpha = float(sys.argv[1]) if len(sys.argv) > 1 else 0.5 #learning rate
-    l1_ratio = float(sys.argv[2]) if sys.argv > 1 else 0.5
+    l1_ratio = float(sys.argv[2]) if len(sys.argv) > 1 else 0.5
     
 
     with mlflow.start_run(): #automatic experiment tool
@@ -73,6 +75,21 @@ if __name__ == "__main__":
         mlflow.log_metric("mae", mae)
         mlflow.log_metric("r2", r2)
 
-        
+        #using Dagshub as the model server
+        server_url = "https://dagshub.com/DanHeGa/Red-Wine-quality-model.mlflow"
+        mlflow.set_tracking_uri(server_url)
+
+        tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+
+        if tracking_url_type_store != "file":
+            mlflow.sklearn.log_model(
+                lr, "model", registered_model_name="ElasticNetWineModel"
+            )
+        else:
+            mlflow.sklearn.log_model(lr, "model")
+
+
+
+
 
 
