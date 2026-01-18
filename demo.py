@@ -1,4 +1,3 @@
-import os
 import warnings
 import sys
 
@@ -14,7 +13,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet #regression model
 from urllib.parse import urlparse
 import mlflow
-from mlflow.models.signature import infer_signature
 import mlflow.sklearn
 import logging
 
